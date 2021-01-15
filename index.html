@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BMKG</title>
+</head>
+
+<body>
+  <div id="tampil">
+    tes
+  </div>
+  <button>mulai</button>
+  <button>stop</button>
+  <script type="text/javascript" charset="utf-8">
+    let alamat = 'https://data.bmkg.go.id/autogempa.xml';
+    let dip = document.querySelector('#tampil');
+
+    localStorage.setItem('wkt2', "");
+    setInterval(kerjakan, 10000);
+
+    function kerjakan() {
+      fetch(alamat)
+        .then((res) => {
+          return res.text();
+        })
+        .then((isi) => {
+          let pars = new DOMParser();
+          let xm = pars.parseFromString(isi, 'text/xml');
+          let jam = xm.querySelector('Jam').innerHTML;
+          localStorage.setItem('wkt', jam);
+          let wkt = localStorage.getItem('wkt');
+          let wkt2 = localStorage.getItem('wkt2');
+          let wil1 = xm.querySelector('Wilayah1').innerHTML;
+          let mag = xm.querySelector('Magnitude').innerHTML;
+          if (wil1.includes('SULBAR') && wkt !== wkt2) {
+            localStorage.setItem('wkt2', wkt);
+            alert(mag)
+          }
+        })
+    }
+  </script>
+</body>
+</html>
